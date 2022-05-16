@@ -21,8 +21,8 @@ namespace Blog.Data.Concrete.EntityFramework.Contexts
             optionsBuilder.UseSqlServer(connectionString: 
                 @"Server=DESKTOP-4H9DS7M\\SQLEXPRESS;
                 Database=MyBlogDB;
-                User Id=robos;
-                Password=4796;
+                User Id=ismetatakli;
+                Password=1234;
                 Trusted_Connection=True;
                 MultipleActiveResultSets=true");
         }
