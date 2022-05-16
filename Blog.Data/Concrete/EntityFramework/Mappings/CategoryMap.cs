@@ -28,6 +28,34 @@ namespace Blog.Data.Concrete.EntityFramework.Mappings
             builder.Property(c => c.isDeleted).IsRequired();
             builder.Property(c => c.Note).HasMaxLength(300);
             builder.ToTable("Categories");
+            builder.HasData(
+                new Category
+                {
+                    Id = 1,
+                    Name = "ASP.NET",
+                    Description = "ASP.NET Kategorisi",
+                    isActive = true,
+                    isDeleted = false,
+                    CreatedByName = "InitialCreate",
+                    ModifiedByName = "InitialCreate",
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                    Note = "İlk eklenen kategori"
+                },
+                   new Category
+                   {
+                       Id = 2,
+                       Name = "ASP.NET Core",
+                       Description = "ASP.NET Core Kategorisi",
+                       isActive = true,
+                       isDeleted = false,
+                       CreatedByName = "InitialCreate",
+                       ModifiedByName = "InitialCreate",
+                       CreatedDate = DateTime.Now,
+                       ModifiedDate = DateTime.Now,
+                       Note = "İkinci eklenen kategori"
+                   }
+            );
         }
     }
 }

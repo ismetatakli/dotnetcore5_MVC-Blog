@@ -41,6 +41,24 @@ namespace Blog.Data.Concrete.EntityFramework.Mappings
             builder.Property(u => u.isDeleted).IsRequired();
             builder.Property(u => u.Note).HasMaxLength(300);
             builder.ToTable("Users");
+            builder.HasData(new User {
+                Id = 1,
+                RoleId = 1,
+                FirstName = "İsmet",
+                LastName = "Ataklı",
+                UserName = "ismetatakli",
+                Email = "ismetatakli@gmail.com",
+                isActive = true,
+                isDeleted = false,
+                CreatedByName = "InitialCreate",
+                ModifiedByName = "InitialCreate",
+                CreatedDate = DateTime.Now,
+                ModifiedDate = DateTime.Now,
+                Description = "İlk eklenen kullanıcı",
+                Note = "Kullanıcı ilk kez eklendi",
+                PasswordHash = Encoding.ASCII.GetBytes("81dc9bdb52d04dc20036dbd8313ed055"),
+                Picture = "default.png"
+            });
         }
     }
 }
