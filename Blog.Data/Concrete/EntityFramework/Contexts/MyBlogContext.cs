@@ -18,8 +18,8 @@ namespace Blog.Data.Concrete.EntityFramework.Contexts
         public DbSet<User> Users { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(connectionString: 
-                @"Server=DESKTOP-4H9DS7M\\SQLEXPRESS;
+            optionsBuilder.UseSqlServer(connectionString:
+                @"Server=DESKTOP-4H9DS7M\SQLEXPRESS;
                 Database=MyBlogDB;
                 User Id=ismetatakli;
                 Password=1234;
