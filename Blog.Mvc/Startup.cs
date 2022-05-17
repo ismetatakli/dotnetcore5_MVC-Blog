@@ -1,3 +1,4 @@
+using Blog.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +25,7 @@ namespace Blog.Mvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.LoadMyServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
