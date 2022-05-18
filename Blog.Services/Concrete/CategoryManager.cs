@@ -30,7 +30,8 @@ namespace Blog.Services.Concrete
             var category = _mapper.Map<Category>(categoryAddDto);
             category.CreatedByName = createdByName;
             category.ModifiedByName = createdByName;
-            await _unitOfWork.Categories.AddAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+            await _unitOfWork.Categories.AddAsync(category);//.ContinueWith(async t =>await _unitOfWork.SaveAsync());
+            await _unitOfWork.SaveAsync();
             return new Result(ResultStatus.Success, $"{categoryAddDto.Name} kategorisi başarıyla eklendi");
         }
 
@@ -42,7 +43,8 @@ namespace Blog.Services.Concrete
                 category.isDeleted = true;
                 category.ModifiedByName = modifiedByName;
                 category.ModifiedDate = DateTime.Now;
-                await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.Categories.UpdateAsync(category);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Success, $"{category.Name} kategorisi başarıyla silindi");
             }
             return new Result(ResultStatus.Error, "Kategori bulunamadı");
@@ -113,7 +115,8 @@ namespace Blog.Services.Concrete
             var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
             if (category != null)
             {
-                await _unitOfWork.Categories.Delete(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.Categories.Delete(category);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Success, $"{category.Name} kategorisi başarıyla veritabanından silindi");
             }
             return new Result(ResultStatus.Error, "Kategori bulunamadı");
@@ -123,7 +126,8 @@ namespace Blog.Services.Concrete
         {
             var category = _mapper.Map<Category>(categoryUpdateDto);
             category.ModifiedByName = modifiedByName;
-            await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+            await _unitOfWork.Categories.UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
             return new Result(ResultStatus.Success, $"{categoryUpdateDto.Name} kategorisi başarıyla güncellendi");
         }
     }
