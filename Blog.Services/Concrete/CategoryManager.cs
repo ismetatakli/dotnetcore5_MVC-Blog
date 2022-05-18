@@ -73,7 +73,11 @@ namespace Blog.Services.Concrete
                     ResultStatus = ResultStatus.Success
                 });
             }
-            return new DataResult<CategoryListDto>(ResultStatus.Error, "Kategoriler çağırılırken hata oluştu", null);
+            return new DataResult<CategoryListDto>(ResultStatus.Error, "Kategoriler çağırılırken hata oluştu", new CategoryListDto {
+                Categories = null,
+                ResultStatus = ResultStatus.Error,
+                Message = "Kategoriler çağırılırken hata oluştu"
+            });
         }
 
         public async Task<IDataResult<CategoryListDto>> GetAllByNonDeleted()
