@@ -25,14 +25,18 @@ namespace Blog.Services.Concrete
             _mapper = mapper;
         }
 
-        public async Task<IResult> Add(CategoryAddDto categoryAddDto, string createdByName)
+        public async Task<IDataResult<CategoryDto>> Add(CategoryAddDto categoryAddDto, string createdByName)
         {
             var category = _mapper.Map<Category>(categoryAddDto);
             category.CreatedByName = createdByName;
             category.ModifiedByName = createdByName;
-            await _unitOfWork.Categories.AddAsync(category);//.ContinueWith(async t =>await _unitOfWork.SaveAsync());
+            var addedCategory = await _unitOfWork.Categories.AddAsync(category);//.ContinueWith(async t =>await _unitOfWork.SaveAsync());
             await _unitOfWork.SaveAsync();
-            return new Result(ResultStatus.Success, $"{categoryAddDto.Name} kategorisi başarıyla eklendi");
+            return new DataResult<CategoryDto>(ResultStatus.Success, $"{categoryAddDto.Name} kategorisi başarıyla eklendi",new CategoryDto {
+                Category = addedCategory,
+                Message = $"{categoryAddDto.Name} kategorisi başarıyla eklendi",
+                ResultStatus = ResultStatus.Success
+            });
         }
 
         public async Task<IResult> Delete(int categoryId, string modifiedByName)
@@ -61,7 +65,11 @@ namespace Blog.Services.Concrete
                     ResultStatus = ResultStatus.Success
                 });
             }
-            return new DataResult<CategoryDto>(ResultStatus.Error, "Kategori çağırılırken hata oluştu", null);
+            return new DataResult<CategoryDto>(ResultStatus.Error, "Kategori çağırılırken hata oluştu", new CategoryDto {
+                Category = null,
+                Message = "Kategori çağırılırken hata oluştu",
+                ResultStatus = ResultStatus.Error
+            });
         }
 
         public async Task<IDataResult<CategoryListDto>> GetAll()
@@ -122,13 +130,17 @@ namespace Blog.Services.Concrete
             return new Result(ResultStatus.Error, "Kategori bulunamadı");
         }
 
-        public async Task<IResult> Update(CategoryUpdateDto categoryUpdateDto, string modifiedByName)
+        public async Task<IDataResult<CategoryDto>> Update(CategoryUpdateDto categoryUpdateDto, string modifiedByName)
         {
             var category = _mapper.Map<Category>(categoryUpdateDto);
             category.ModifiedByName = modifiedByName;
-            await _unitOfWork.Categories.UpdateAsync(category);
+            var updatedCategory = await _unitOfWork.Categories.UpdateAsync(category);
             await _unitOfWork.SaveAsync();
-            return new Result(ResultStatus.Success, $"{categoryUpdateDto.Name} kategorisi başarıyla güncellendi");
+            return new DataResult<CategoryDto>(ResultStatus.Success, $"{categoryUpdateDto.Name} kategorisi başarıyla güncellendi",new CategoryDto {
+                Category = updatedCategory,
+                Message = $"{categoryUpdateDto.Name} kategorisi başarıyla güncellendi",
+                ResultStatus = ResultStatus.Success
+            });
         }
     }
 }
