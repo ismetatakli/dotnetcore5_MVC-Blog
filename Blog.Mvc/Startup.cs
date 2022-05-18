@@ -1,3 +1,4 @@
+using AutoMapper;
 using Blog.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,8 @@ namespace Blog.Mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddAutoMapper(typeof(Startup));
             services.AddRazorPages();
             services.LoadMyServices();
         }
@@ -34,6 +37,7 @@ namespace Blog.Mvc
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages();
             }
             else
             {
@@ -51,7 +55,12 @@ namespace Blog.Mvc
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapAreaControllerRoute(
+                    name: "Admin",
+                    areaName: "Admin",
+                    pattern:"Admin/{controller=Home}/{action=Index}/{id?}"
+                    );
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
