@@ -64,5 +64,13 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             return Json(categories);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> Delete(int categoryId)
+        {
+            var result = await _categoryService.Delete(categoryId, "İsmet Ataklı");
+            var ajaxresult = JsonSerializer.Serialize(result);
+            return Json(ajaxresult);
+        }
+
     }
 }
