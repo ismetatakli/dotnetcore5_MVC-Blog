@@ -70,8 +70,8 @@
                                 <td>@category.ModifiedByName</td>
                                 <td>@category.Note</td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Düzenle</button>
-                                    <button class="btn btn-danger btn-sm btn-delete" data-id="@category.Id"><span class="fas fa-minus-circle"></span> Sil</button>
+                                    <button class="btn btn-primary btn-sm"><span class="fas fa-edit"></span></button>
+                                    <button class="btn btn-danger btn-sm btn-delete" data-id="@category.Id"><span class="fas fa-eraser"></span></button>
                                 </td>
                             </tr>
 
@@ -96,23 +96,23 @@
         $(document).ready(function () {
             $('#categoriesTable').DataTable({
                 dom:
-                    "<'row'<'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
+                    "<'row'<'col pl-0 ml-0'B><'col-md-auto'l><'col-md-auto'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 buttons: [
                     {
-                        text: 'Ekle',
+                        text: '<span class="fas fa-plus"></span>',
                         attr: {
                             id:"btnAdd",
                         },
-                        className: 'btn btn-success',
+                        className: 'btn btn-outline-secondary bg-light text-secondary',
                         //action: function (e, dt, node, config) {
                         //    alert('Ekle Button activated');
                         //}
                     },
                     {
-                        text: 'Yenile',
-                        className: 'btn btn-warning',
+                        text: '<span class="fas fa-sync-alt"></span>',
+                        className: 'btn btn-outline-secondary bg-light text-secondary',
                         action: function (e, dt, node, config) {
                             $.ajax({
                                 type: 'get',
@@ -139,6 +139,10 @@
                                                             <td>${convertToShortDate(category.ModifiedDate)}</td>
                                                             <td>${category.ModifiedByName}</td>
                                                             <td>${category.Note}</td>
+                                                            <td>
+                                                                <button class="btn btn-primary btn-sm"><span class="fas fa-edit"></span></button>
+                                                                <button class="btn btn-danger btn-sm btn-delete" data-id="${category.Id}"><span class="fas fa-eraser"></span></button>
+                                                            </td>
                                                         </tr>`;
                                         });
                                         $('#categoriesTable > tbody').replaceWith(tableBody);
@@ -151,7 +155,9 @@
                                 },
                                 error: function (err) {
                                     console.log(err);
-                                    toastr.error(`${err}`, 'İşlem Başarısız!');
+                                    $('.spinner-border').hide();
+                                    $('#categoriesTable').fadeIn(1400);
+                                    toastr.error(`${err.responseText}`, 'İşlem Başarısız!');
                                 }
                             });
                         }
@@ -435,6 +441,10 @@
                                 <td>${convertToShortDate(categoryAddAjaxModel.CategoryDto.Category.ModifiedDate)}</td>
                                 <td>${categoryAddAjaxModel.CategoryDto.Category.ModifiedByName}</td>
                                 <td>${categoryAddAjaxModel.CategoryDto.Category.Note}</td>
+                                <td>
+                                       <button class="btn btn-primary btn-sm"><span class="fas fa-edit"></span></button>
+                                       <button class="btn btn-danger btn-sm btn-delete" data-id="${categoryAddAjaxModel.CategoryDto.Category.Id}"><span class="fas fa-eraser"></span></button>
+                                </td>
                             </tr>`;
                             console.log(categoryAddAjaxModel);
                             const newTableRowObject = $(newTableRow);
@@ -457,9 +467,11 @@
             $(document).on('click', '.btn-delete', function (event) {
                 event.preventDefault();
                 const id = $(this).attr('data-id');
+                const tableRow = $(`[name="${id}"]`);
+                const categoryName = tableRow.find('td:eq(1)').text();
                 Swal.fire({
                     title: 'Silmek istediğinize emin misiniz?',
-                    text: "Seçili kategori silinecektir!",
+                    text: `'${categoryName}' kategorisi silinecektir!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -474,18 +486,26 @@
                             data: { categoryId: id },
                             url: '@Url.Action("Delete","Category")',
                             success: function (data) {
-                                const result = jQuery.parseJSON(data);
-                                if (result.ResultStatus===0) {
+                                const categoryDto = jQuery.parseJSON(data);
+                                if (categoryDto.ResultStatus === 0) {
                                     Swal.fire(
                                         'Silindi!',
-                                        'Kategori başarıyla silindi.',
+                                        `'${categoryDto.Category.Name}' kategorisi başarıyla silindi`,
                                         'success'
                                     );
-                                    const tableRow = $(`[name="${id}"]`);
+
                                     tableRow.fadeOut(3500);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: `Bir hata oluştu! ${result.Message}`,
+                                        //footer: '<a href="">Why do I have this issue?</a>'
+                                    });
                                 }
                             },
                             error: function (err) {
+                                console.log(err);
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -495,7 +515,7 @@
                             }
                         });
                     }
-                })
+                });
             });
         });
     </script>

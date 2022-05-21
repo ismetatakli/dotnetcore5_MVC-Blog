@@ -57,7 +57,7 @@ namespace Blog.Mvc.Areas.Admin.Controllers
 
         public async Task<JsonResult> GetAllCategories()
         {
-            var result = await _categoryService.GetAll();
+            var result = await _categoryService.GetAllByNonDeleted();
             var categories = JsonSerializer.Serialize(result.Data,new JsonSerializerOptions {
                 ReferenceHandler = ReferenceHandler.Preserve
             });
