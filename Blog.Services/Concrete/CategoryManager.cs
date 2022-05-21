@@ -39,7 +39,7 @@ namespace Blog.Services.Concrete
             });
         }
 
-        public async Task<IResult> Delete(int categoryId, string modifiedByName)
+        public async Task<IDataResult<CategoryDto>> Delete(int categoryId, string modifiedByName)
         {
             var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
             if (category != null)
@@ -47,11 +47,21 @@ namespace Blog.Services.Concrete
                 category.isDeleted = true;
                 category.ModifiedByName = modifiedByName;
                 category.ModifiedDate = DateTime.Now;
-                await _unitOfWork.Categories.UpdateAsync(category);
+                var deletedCategory = await _unitOfWork.Categories.UpdateAsync(category);
                 await _unitOfWork.SaveAsync();
-                return new Result(ResultStatus.Success, $"{category.Name} kategorisi başarıyla silindi");
+                return new DataResult<CategoryDto>(ResultStatus.Success, $"{deletedCategory.Name} kategorisi başarıyla silindi", new CategoryDto
+                {
+                    Category = deletedCategory,
+                    Message = $"{deletedCategory.Name} kategorisi başarıyla silindi",
+                    ResultStatus = ResultStatus.Success
+                });
             }
-            return new Result(ResultStatus.Error, "Kategori bulunamadı");
+            return new DataResult<CategoryDto>(ResultStatus.Error, "Kategori bulunamadı", new CategoryDto
+            {
+                Category = null,
+                Message = "Kategori bulunamadı",
+                ResultStatus = ResultStatus.Error
+            });
         }
 
         public async Task<IDataResult<CategoryDto>> Get(int categoryId)
@@ -101,7 +111,12 @@ namespace Blog.Services.Concrete
                     ResultStatus = ResultStatus.Success
                 });
             }
-            return new DataResult<CategoryListDto>(ResultStatus.Error, "Kategoriler çağırılırken hata oluştu", null);
+            return new DataResult<CategoryListDto>(ResultStatus.Error, "Kategoriler çağırılırken hata oluştu", new CategoryListDto
+            {
+                Categories = null,
+                ResultStatus = ResultStatus.Error,
+                Message = "Kategoriler çağırılırken hata oluştu"
+            });
         }
 
         public async Task<IDataResult<CategoryListDto>> GetAllByNonDeletedAndActive()

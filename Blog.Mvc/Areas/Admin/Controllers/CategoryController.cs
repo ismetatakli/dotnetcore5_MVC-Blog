@@ -23,7 +23,7 @@ namespace Blog.Mvc.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var result = await _categoryService.GetAll();
+            var result = await _categoryService.GetAllByNonDeleted();
             return View(result.Data);
         }
         [HttpGet]
@@ -68,8 +68,8 @@ namespace Blog.Mvc.Areas.Admin.Controllers
         public async Task<JsonResult> Delete(int categoryId)
         {
             var result = await _categoryService.Delete(categoryId, "İsmet Ataklı");
-            var ajaxresult = JsonSerializer.Serialize(result);
-            return Json(ajaxresult);
+            var deletedCategory = JsonSerializer.Serialize(result.Data);
+            return Json(deletedCategory);
         }
 
     }
