@@ -1,6 +1,7 @@
 ﻿using Blog.Data.Abstract;
 using Blog.Data.Concrete;
 using Blog.Data.Concrete.EntityFramework.Contexts;
+using Blog.Entities.Concrete;
 using Blog.Services.Abstract;
 using Blog.Services.Concrete;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ namespace Blog.Services.Extensions
         public static IServiceCollection LoadMyServices(this IServiceCollection serviceCollections)
         {
             serviceCollections.AddDbContext<MyBlogContext>();
+            serviceCollections.AddIdentity<User, Role>().AddEntityFrameworkStores<MyBlogContext>();
             serviceCollections.AddScoped<IUnitOfWork, UnitOfWork>();
             serviceCollections.AddScoped<ICategoryService, CategoryManager>();
             serviceCollections.AddScoped<IArticleService, ArticleManager>();
