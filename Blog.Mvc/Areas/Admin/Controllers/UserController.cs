@@ -21,5 +21,10 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             var users = await _userManager.Users.ToListAsync();
             return View(new UserListDto { Users = users, ResultStatus = ResultStatus.Success });
         }
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return PartialView("_UserAddPartial");
+        }
     }
 }
