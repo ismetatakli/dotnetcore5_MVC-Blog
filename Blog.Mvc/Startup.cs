@@ -1,4 +1,5 @@
 using AutoMapper;
+using Blog.Mvc.AutoMapper.Profiles;
 using Blog.Services.AutoMapper.Profiles;
 using Blog.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -33,7 +34,7 @@ namespace Blog.Mvc
                 opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
             });
             services.AddSession();
-            services.AddAutoMapper(typeof(CategoryProfile),typeof(ArticleProfile));
+            services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile), typeof(UserProfile));
             services.AddRazorPages();
             services.LoadMyServices();
             services.ConfigureApplicationCookie(options => {
