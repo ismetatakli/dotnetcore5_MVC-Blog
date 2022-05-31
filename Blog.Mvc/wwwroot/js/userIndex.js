@@ -21,47 +21,43 @@
                 action: function (e, dt, node, config) {
                     $.ajax({
                         type: 'get',
-                        url: '/Admin/Category/GetAllCategories/',
+                        url: '/Admin/User/GetAllUsers/',
                         contentType: "application/json",
                         beforeSend: function () {
-                            $('#categoriesTable').hide();
+                            $('#usersTable').hide();
                             $('.spinner-border').show();
                         },
                         success: function (data) {
-                            const categoryListDto = jQuery.parseJSON(data);
-                            console.log(categoryListDto);
-                            if (categoryListDto.ResultStatus === 0) {
-                                let tableBody = "";
-                                $.each(categoryListDto.Categories.$values, function (index, category) {
-                                    tableBody += `<tr name="${category.Id}">
-                                                            <td>${category.Id}</td>
-                                                            <td>${category.Name}</td>
-                                                            <td>${category.Description}</td>
-                                                            <td>${convertFirstLetterToUpperCase(category.isActive.toString())}</td>
-                                                            <td>${convertFirstLetterToUpperCase(category.isDeleted.toString())}</td>
-                                                            <td>${convertToShortDate(category.CreatedDate)}</td>
-                                                            <td>${category.CreatedByName}</td>
-                                                            <td>${convertToShortDate(category.ModifiedDate)}</td>
-                                                            <td>${category.ModifiedByName}</td>
-                                                            <td>${category.Note}</td>
-                                                            <td>
-                                                                <button class="btn btn-primary btn-sm btn-update" data-id="${category.Id}"><span class="fas fa-edit"></span></button>
-                                                                <button class="btn btn-danger btn-sm btn-delete" data-id="${category.Id}"><span class="fas fa-eraser"></span></button>
-                                                            </td>
-                                                        </tr>`;
+                            const userListDto = jQuery.parseJSON(data);
+                            dataTable.clear();
+                            console.log(userListDto);
+                            if (userListDto.ResultStatus === 0) {
+                                $.each(userListDto.Users.$values, function (index, user) {
+                                    dataTable.row.add([
+                                        user.Id,
+                                        user.UserName,
+                                        user.Email,
+                                        user.PhoneNumber,
+                                        `<img src="/img/` + user.Picture +`" style="max-height:50px; max-width:50px" >`,
+                                        //`<img src="/img/${user.Picture}" style="max-height:50px; max-width:50px" />`
+                                            `
+                                                    <button class="btn btn-primary btn-sm btn-update" data-id="${user.Id}"><span class="fas fa-edit"></span></button>
+                                                    <button class="btn btn-danger btn-sm btn-delete" data-id="${user.Id}"><span class="fas fa-eraser"></span></button>
+                                            `
+                                    ]);
                                 });
-                                $('#categoriesTable > tbody').replaceWith(tableBody);
+                                dataTable.draw();
                                 $('.spinner-border').hide();
-                                $('#categoriesTable').fadeIn(1400);
+                                $('#usersTable').fadeIn(1400);
                             }
                             else {
-                                toastr.error(`${categoryListDto.Message}`, 'İşlem Başarısız!');
+                                toastr.error(`${userListDto.Message}`, 'İşlem Başarısız!');
                             }
                         },
                         error: function (err) {
                             console.log(err);
                             $('.spinner-border').hide();
-                            $('#categoriesTable').fadeIn(1400);
+                            $('#usersTable').fadeIn(1400);
                             toastr.error(`${err.responseText}`, 'İşlem Başarısız!');
                         }
                     });
@@ -346,12 +342,12 @@
                             userAddAjaxModel.UserDto.User.UserName,
                             userAddAjaxModel.UserDto.User.Email,
                             userAddAjaxModel.UserDto.User.PhoneNumber,
-                            
-                            `<img src="/img/${userAddAjaxModel.UserDto.User.Picture}" alt="|${userAddAjaxModel.UserDto.User.UserName}" style="max-height:50px; max-width:50px" />`
-                            `<td>
-                                    <button class="btn btn-primary btn-sm btn-update" data-id="userAddAjaxModel.UserDto.User.Id"><span class="fas fa-edit"></span></button>
-                                    <button class="btn btn-danger btn-sm btn-delete" data-id="userAddAjaxModel.UserDto.User.Id"><span class="fas fa-eraser"></span></button>
-                            </td>`
+
+                            `<img src="/img/${userAddAjaxModel.UserDto.User.Picture}" alt="${userAddAjaxModel.UserDto.User.UserName}" style="max-height:50px; max-width:50px" />`
+                                `
+                                    <button class="btn btn-primary btn-sm btn-update" data-id="${userAddAjaxModel.UserDto.User.Id}"><span class="fas fa-edit"></span></button>
+                                    <button class="btn btn-danger btn-sm btn-delete" data-id="${userAddAjaxModel.UserDto.User.Id}"><span class="fas fa-eraser"></span></button>
+                            `
                         ]).draw();
                         toastr.success(`${userAddAjaxModel.UserDto.Message}`, 'İşlem Başarılı');
                     }
