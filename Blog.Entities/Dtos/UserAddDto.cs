@@ -37,6 +37,7 @@ namespace Blog.Entities.Dtos
         [DisplayName("Profil Resmi")]
         [Required(ErrorMessage = "{0} gereklidir.")]
         [DataType(DataType.Upload)]
-        public IFormFile Picture { get; set; }
+        public IFormFile PictureFile { get; set; }
+        public string Picture { get; set; }
     }
 }
