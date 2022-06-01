@@ -337,13 +337,13 @@
                     const isValid = newFormBody.find('[name="IsValid"]').val() === 'True';
                     if (isValid) {
                         placeHolderDiv.find('.modal').modal('hide');
-                        dataTable.row.add([
+                        var newRow = dataTable.row.add([
                             userAddAjaxModel.UserDto.User.Id,
                             userAddAjaxModel.UserDto.User.UserName,
                             userAddAjaxModel.UserDto.User.Email,
                             userAddAjaxModel.UserDto.User.PhoneNumber,
 
-                            `<img src="/img/${userAddAjaxModel.UserDto.User.Picture}" alt="${userAddAjaxModel.UserDto.User.UserName}" style="max-height:50px; max-width:50px" />`
+                            `<img src="/img/` + userAddAjaxModel.UserDto.User.Picture + `"alt="` + userAddAjaxModel.UserDto.User.UserName + `" style="max-height:50px; max-width:50px" />`,
                                 `
                                     <button class="btn btn-primary btn-sm btn-update" data-id="${userAddAjaxModel.UserDto.User.Id}"><span class="fas fa-edit"></span></button>
                                     <button class="btn btn-danger btn-sm btn-delete" data-id="${userAddAjaxModel.UserDto.User.Id}"><span class="fas fa-eraser"></span></button>
@@ -367,16 +367,15 @@
         });
     });
     $(document).on('click', '.btn-delete', function (event) {
+        
         event.preventDefault();
         const id = $(this).attr('data-id');
         const tableRow = $(`[name="${id}"]`);
-        const categoryName = tableRow.find('td:eq(1)').text();
-        console.log(id);
-        console.log(tableRow);
-        console.log(categoryName);
+        console.log(tableRow.find('td:eq(1)').text());
+        const userName = tableRow.find('td:eq(1)').text();
         Swal.fire({
             title: 'Silmek istediğinize emin misiniz?',
-            text: `'${categoryName}' kategorisi silinecektir!`,
+            text: `'${userName}' kullanıcısı silinecektir!`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -388,23 +387,22 @@
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    data: { categoryId: id },
-                    url: '/Admin/Category/Delete/',
+                    data: { userId: id },
+                    url: '/Admin/User/Delete/',
                     success: function (data) {
-                        const categoryDto = jQuery.parseJSON(data);
-                        if (categoryDto.ResultStatus === 0) {
+                        const userDto = jQuery.parseJSON(data);
+                        if (userDto.ResultStatus === 0) {
                             Swal.fire(
                                 'Silindi!',
-                                `'${categoryDto.Category.Name}' kategorisi başarıyla silindi`,
+                                `'${userDto.User.UserName}' kullanıcısı başarıyla silindi`,
                                 'success'
                             );
-
-                            tableRow.fadeOut(3500);
+                            dataTable.row(tableRow).remove().draw();
                         } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: `Bir hata oluştu! ${categoryDto.Message}`,
+                                text: `Bir hata oluştu! ${userDto.Message}`,
                                 //footer: '<a href="">Why do I have this issue?</a>'
                             });
                         }

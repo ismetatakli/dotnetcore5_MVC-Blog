@@ -52,6 +52,36 @@ namespace Blog.Mvc.Areas.Admin.Controllers
         {
             return PartialView("_UserAddPartial");
         }
+        public async Task<JsonResult> Delete(int userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                var deletedUser = JsonSerializer.Serialize(new UserDto {
+                    ResultStatus = ResultStatus.Success,
+                    Message = $"{user.UserName} adlı kullanıcı başarıyla silindi",
+                    User = user
+                });
+                return Json(deletedUser);
+            }
+            else
+            {
+                string errMessages = String.Empty;
+                foreach (var err in result.Errors)
+                {
+                    errMessages = $"*{err.Description}\n";
+                }
+                var deletedUserErrModel = JsonSerializer.Serialize(new UserDto
+                {
+                    ResultStatus = ResultStatus.Error,
+                    Message = $"{user.UserName} adlı kullanıcı silinirken bir hata oluştu. \n {errMessages}",
+                    User = user
+                });
+                return Json(deletedUserErrModel);
+            }
+            
+        }
         [HttpPost]
         public async Task<IActionResult> Add(UserAddDto userAddDto)
         {
