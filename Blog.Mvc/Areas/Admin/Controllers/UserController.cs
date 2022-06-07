@@ -40,7 +40,7 @@ namespace Blog.Mvc.Areas.Admin.Controllers
                 {
                     Users = users,
                     ResultStatus = ResultStatus.Success
-                },new JsonSerializerOptions
+                }, new JsonSerializerOptions
                 {
                     ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve
                 }
@@ -58,7 +58,8 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
             {
-                var deletedUser = JsonSerializer.Serialize(new UserDto {
+                var deletedUser = JsonSerializer.Serialize(new UserDto
+                {
                     ResultStatus = ResultStatus.Success,
                     Message = $"{user.UserName} adlı kullanıcı başarıyla silindi",
                     User = user
@@ -80,7 +81,7 @@ namespace Blog.Mvc.Areas.Admin.Controllers
                 });
                 return Json(deletedUserErrModel);
             }
-            
+
         }
         [HttpPost]
         public async Task<IActionResult> Add(UserAddDto userAddDto)
@@ -92,26 +93,28 @@ namespace Blog.Mvc.Areas.Admin.Controllers
                 var result = await _userManager.CreateAsync(user, userAddDto.Password);
                 if (result.Succeeded)
                 {
-                    var userAddAjaxModel = JsonSerializer.Serialize(new UserAddAjaxViewModel 
+                    var userAddAjaxModel = JsonSerializer.Serialize(new UserAddAjaxViewModel
                     {
-                        UserDto = new UserDto {
+                        UserDto = new UserDto
+                        {
                             ResultStatus = ResultStatus.Success,
                             Message = $"{user.UserName} kullanıcısı başarıyla eklendi.",
                             User = user
                         },
-                        UserAddPartial = await this.RenderViewToStringAsync("_UserAddPartial",userAddDto)
+                        UserAddPartial = await this.RenderViewToStringAsync("_UserAddPartial", userAddDto)
                     });
                     return Json(userAddAjaxModel);
                 }
                 else
                 {
-                    foreach(var err in result.Errors)
+                    foreach (var err in result.Errors)
                     {
-                        ModelState.AddModelError("",err.Description);
+                        ModelState.AddModelError("", err.Description);
                     }
-                    var userAddAjaxModelError = JsonSerializer.Serialize(new UserAddAjaxViewModel {
+                    var userAddAjaxModelError = JsonSerializer.Serialize(new UserAddAjaxViewModel
+                    {
                         UserAddDto = userAddDto,
-                        UserAddPartial = await this.RenderViewToStringAsync("_UserAddPartial",userAddDto)
+                        UserAddPartial = await this.RenderViewToStringAsync("_UserAddPartial", userAddDto)
                     });
                     return Json(userAddAjaxModelError);
                 }
@@ -122,8 +125,13 @@ namespace Blog.Mvc.Areas.Admin.Controllers
                 UserAddPartial = await this.RenderViewToStringAsync("_UserAddPartial", userAddDto)
             });
             return Json(userAddAjaxModelStateError);
+        }
+        public async Task<PartialViewResult> Update(int userId)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-
+            var userUpdateDto = _mapper.Map<UserUpdateDto>(user);
+            return PartialView("_UserUpdatePartial", userUpdateDto);
 
         }
         public async Task<string> ImageUpload(UserAddDto userAddDto)
