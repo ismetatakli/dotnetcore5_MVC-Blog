@@ -352,7 +352,7 @@
                             `
                         ]).node();
                         const jqueryTableRow = $(newTableRow);
-                        jqueryTableRow.attr('name', `${userAddAjaxModel.UserDto.User.Id,}`);
+                        jqueryTableRow.attr('name', `${userAddAjaxModel.UserDto.User.Id}`);
                         dataTable.row(newTableRow).dtaw();
                         toastr.success(`${userAddAjaxModel.UserDto.Message}`, 'İşlem Başarılı');
                     }
