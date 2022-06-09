@@ -33,18 +33,20 @@
                             console.log(userListDto);
                             if (userListDto.ResultStatus === 0) {
                                 $.each(userListDto.Users.$values, function (index, user) {
-                                    dataTable.row.add([
+                                    const newTableRow = dataTable.row.add([
                                         user.Id,
                                         user.UserName,
                                         user.Email,
                                         user.PhoneNumber,
-                                        `<img src="/img/` + user.Picture + `" style="max-height:50px; max-width:50px" >`,
+                                        `<img src="/img/` + user.Picture + `" class="my-table-image" >`,
                                         //`<img src="/img/${user.Picture}" style="max-height:50px; max-width:50px" />`
                                         `
                                                     <button class="btn btn-primary btn-sm btn-update" data-id="${user.Id}"><span class="fas fa-edit"></span></button>
                                                     <button class="btn btn-danger btn-sm btn-delete" data-id="${user.Id}"><span class="fas fa-eraser"></span></button>
                                             `
-                                    ]);
+                                    ]).node();
+                                    const jqueryTableRow = $(newTableRow);
+                                    jqueryTableRow.attr('name', `${user.Id}`);
                                 });
                                 dataTable.draw();
                                 $('.spinner-border').hide();
@@ -337,18 +339,21 @@
                     const isValid = newFormBody.find('[name="IsValid"]').val() === 'True';
                     if (isValid) {
                         placeHolderDiv.find('.modal').modal('hide');
-                        var newRow = dataTable.row.add([
+                        const newTableRow = dataTable.row.add([
                             userAddAjaxModel.UserDto.User.Id,
                             userAddAjaxModel.UserDto.User.UserName,
                             userAddAjaxModel.UserDto.User.Email,
                             userAddAjaxModel.UserDto.User.PhoneNumber,
 
-                            `<img src="/img/` + userAddAjaxModel.UserDto.User.Picture + `"alt="` + userAddAjaxModel.UserDto.User.UserName + `" style="max-height:50px; max-width:50px" />`,
+                            `<img src="/img/` + userAddAjaxModel.UserDto.User.Picture + `"alt="` + userAddAjaxModel.UserDto.User.UserName + `" class= "my-table-image" />`,
                             `
                                     <button class="btn btn-primary btn-sm btn-update" data-id="${userAddAjaxModel.UserDto.User.Id}"><span class="fas fa-edit"></span></button>
                                     <button class="btn btn-danger btn-sm btn-delete" data-id="${userAddAjaxModel.UserDto.User.Id}"><span class="fas fa-eraser"></span></button>
                             `
-                        ]).draw();
+                        ]).node();
+                        const jqueryTableRow = $(newTableRow);
+                        jqueryTableRow.attr('name', `${userAddAjaxModel.UserDto.User.Id,}`);
+                        dataTable.row(newTableRow).dtaw();
                         toastr.success(`${userAddAjaxModel.UserDto.Message}`, 'İşlem Başarılı');
                     }
                     else {
