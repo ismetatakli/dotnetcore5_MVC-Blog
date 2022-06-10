@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    [Migration("20220530124029_InitialCreate")]
+    [Migration("20220610144318_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,10 +158,10 @@ namespace Blog.Data.Migrations
                         {
                             Id = 1,
                             CreatedByName = "InitialCreate",
-                            CreatedDate = new DateTime(2022, 5, 30, 15, 40, 28, 721, DateTimeKind.Local).AddTicks(9301),
+                            CreatedDate = new DateTime(2022, 6, 10, 17, 43, 17, 727, DateTimeKind.Local).AddTicks(6896),
                             Description = "ASP.NET Kategorisi",
                             ModifiedByName = "InitialCreate",
-                            ModifiedDate = new DateTime(2022, 5, 30, 15, 40, 28, 722, DateTimeKind.Local).AddTicks(263),
+                            ModifiedDate = new DateTime(2022, 6, 10, 17, 43, 17, 727, DateTimeKind.Local).AddTicks(7153),
                             Name = "ASP.NET",
                             Note = "İlk eklenen kategori",
                             isActive = true,
@@ -171,10 +171,10 @@ namespace Blog.Data.Migrations
                         {
                             Id = 2,
                             CreatedByName = "InitialCreate",
-                            CreatedDate = new DateTime(2022, 5, 30, 15, 40, 28, 722, DateTimeKind.Local).AddTicks(2017),
+                            CreatedDate = new DateTime(2022, 6, 10, 17, 43, 17, 727, DateTimeKind.Local).AddTicks(7622),
                             Description = "ASP.NET Core Kategorisi",
                             ModifiedByName = "InitialCreate",
-                            ModifiedDate = new DateTime(2022, 5, 30, 15, 40, 28, 722, DateTimeKind.Local).AddTicks(2020),
+                            ModifiedDate = new DateTime(2022, 6, 10, 17, 43, 17, 727, DateTimeKind.Local).AddTicks(7623),
                             Name = "ASP.NET Core",
                             Note = "İkinci eklenen kategori",
                             isActive = true,
@@ -257,6 +257,22 @@ namespace Blog.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConcurrencyStamp = "1cbc0280-27eb-42fc-959d-2f766ef11997",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ConcurrencyStamp = "f46ba858-883a-48e3-9572-ba3aec9c0d97",
+                            Name = "Editor",
+                            NormalizedName = "EDITOR"
+                        });
                 });
 
             modelBuilder.Entity("Blog.Entities.Concrete.RoleClaim", b =>
@@ -352,6 +368,44 @@ namespace Blog.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "efa330a6-303a-48e8-a4b3-63992672d889",
+                            Email = "ismetatakli@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ISMETATAKLI@GMAIL.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOL0EU7Sm92GjuIKUwSkJulKcOqDHvNUPEJMQ2fHsHMQRop+LMSZmU1r+Suyg9NgJQ==",
+                            PhoneNumber = "+905555555555",
+                            PhoneNumberConfirmed = true,
+                            Picture = "default-user.png",
+                            SecurityStamp = "379cdef9-2705-4be1-b004-9994e0682c35",
+                            TwoFactorEnabled = false,
+                            UserName = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8a131e51-5a96-4a1d-9edf-3062945e706c",
+                            Email = "ismetatakli1@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ISMETATAKLI1@GMAIL.COM",
+                            NormalizedUserName = "EDITOR",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFovnpXvRoQNrJqB9SGhF6rCL1uXF2BD7PjBEp0GVjMMpaQ16zd1J2sGb6S1jE4Uiw==",
+                            PhoneNumber = "+905555555555",
+                            PhoneNumberConfirmed = true,
+                            Picture = "default-user.png",
+                            SecurityStamp = "8efe4ff7-27ea-4b0d-98e1-1c2830d1ec79",
+                            TwoFactorEnabled = false,
+                            UserName = "Editor"
+                        });
                 });
 
             modelBuilder.Entity("Blog.Entities.Concrete.UserClaim", b =>
@@ -413,6 +467,18 @@ namespace Blog.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("Blog.Entities.Concrete.UserToken", b =>
